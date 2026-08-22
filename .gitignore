@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Environment variables / secrets
+.env
+.env.*
+!.env.example
+
+# Node / Angular
+node_modules/
+dist/
+.angular/
+
+# IDE
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
