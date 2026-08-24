@@ -2,9 +2,9 @@ from pydantic import BaseModel
 from typing import Optional, List
 
 class FragranceNotes(BaseModel):
-    top: List[str] = []
-    heart: List[str] = []
-    base: List[str] = []
+    top_notes: List[str] = []
+    heart_notes: List[str] = []
+    base_notes: List[str] = []
 
 class PerfumeCreate(BaseModel):
     name: str

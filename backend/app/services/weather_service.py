@@ -14,13 +14,14 @@ class WeatherService:
             "units": "metric"
         }
         res=requests.get(url, params=params)
-        if res == 200:
+        if res.status_code == 200:
             data = res.json()
             return {
                 "temp": f"{data['main']['temp']}°C",
                 "condition": data["weather"][0]["main"],
                 "description": data["weather"][0]["description"],
-                "humidity": f"{data['main']['humidity']}%"
+                "humidity": f"{data['main']['humidity']}%",
+                "w_code": str(data["weather"][0]["id"])
             }
         raise HTTPException(status_code=400, detail=f"Could not retrieve weather for {city}")
     

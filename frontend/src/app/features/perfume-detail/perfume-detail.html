@@ -1,0 +1,19 @@
+<button routerLink="/perfume">back to collection</button>
+<p>ID: {{id()}}</p>
+
+<img [src]="bottlePlaceholder" alt="">
+
+@if(perfume(); as item){
+<p>Name: {{item.name}}</p>
+<p>Brand: {{item.brand}}</p>
+@if(item.notes){
+<p>Top Notes: {{item.notes.top_notes?.join(', ') || 'N/A'}}</p>
+<p>Heart Notes: {{item.notes.heart_notes?.join(', ') || 'N/A'}}</p>
+<p>Base Notes: {{item.notes.base_notes?.join(', ') || 'N/A'}}</p>
+}
+<p>Main Accords: {{item.main_accords?.join(', ') || 'N/A'}}</p>
+<p>Best Seasons: {{item.seasonality?.join(', ') || 'N/A'}}</p>
+}
+@else{
+{{errorMessage()}}
+}
