@@ -23,7 +23,7 @@ Respond ONLY with a valid JSON object matching this schema:
 """
 
         response = self.client.models.generate_content(
-            model = "gemini-3.5-flash",
+            model="gemini-3.6-flash",
             contents=prompt,
             config=types.GenerateContentConfig(response_mime_type="application/json")
         )
@@ -56,7 +56,7 @@ Respond ONLY with a JSON object matching this exact schema:
 }}
 """
         response = self.client.models.generate_content(
-            model="gemgemini-3.5-flash",
+            model="gemini-3.6-flash",
             contents=prompt,
             config=types.GenerateContentConfig(response_mime_type="application/json")
         )

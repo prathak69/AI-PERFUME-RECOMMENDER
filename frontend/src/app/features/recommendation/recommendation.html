@@ -1,0 +1,29 @@
+<p>recommendation works!</p>
+
+<form [formGroup]="recommendForm">
+    <label for="city">City: </label>
+    <input formControlName="city" placeholder="city" id="city" type="text"><br>
+    <label for="occasion">Occasion: </label>
+    <input formControlName="occasion" placeholder="occasion" id="occasion" type="text"><br>
+    <button type="submit" [disabled]="isLoading()" (click)="onSubmit()">
+        @if(isLoading()){
+        <span>getting result..</span>
+        } @else {
+        <span>recommend</span>
+        }
+    </button>
+</form>
+
+
+@if(errorMessage()){
+<p>{{errorMessage()}}</p>
+}
+@else{
+<p>{{recommendation()?.recommended_perfume | titlecase }}</p>
+<p>{{recommendation()?.reasoning}}</p>
+<p>{{weather()?.temp}}</p>
+<p>{{weather()?.condition}}</p>
+<p>{{weather()?.description}}</p>
+<p>{{weather()?.humidity}}</p>
+<p>{{getWeatherIcon()}}</p>
+}

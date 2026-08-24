@@ -1,0 +1,31 @@
+<p>inventory works!</p>
+
+<ul>
+    @for(perfume of perfumes(); track perfume.id || (perfume.name + perfume.brand)){
+    <li>
+        <a [routerLink]="['/perfume', perfume.id]">
+            {{ perfume.name | titlecase }} by {{ perfume.brand | titlecase }}
+        </a>
+        <button (click)="deletePerfume(perfume.id)">delete</button>
+    </li>
+    }
+</ul>
+
+<form [formGroup]="perfumeForm">
+    <label for="name">Name: </label>
+    <input type="text" formControlName="name" placeholder="Perfume Name" id="name"><br>
+    <label for="brand">Brand: </label>
+    <input type="text" formControlName="brand" placeholder="Brand" id="brand"><br>
+    <button type="submit" (click)="onSubmit()" [disabled]="isSubmitting() || perfumeForm.invalid">
+        @if(isSubmitting()){
+        <span>Adding perfume..</span>
+        }
+        @else{
+        <span>Add Perfume</span>
+        }
+    </button>
+</form>
+
+@if(errorMessage()){
+<h5 style="color: red;">{{errorMessage()}}</h5>
+}
