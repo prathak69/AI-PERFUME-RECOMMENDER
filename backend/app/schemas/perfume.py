@@ -2,9 +2,12 @@ from pydantic import BaseModel
 from typing import Optional, List
 
 class FragranceNotes(BaseModel):
-    top_notes: List[str] = []
-    heart_notes: List[str] = []
-    base_notes: List[str] = []
+    top: Optional[List[str]] = []
+    heart: Optional[List[str]] = []
+    base: Optional[List[str]] = []
+    top_notes: Optional[List[str]] = []
+    heart_notes: Optional[List[str]] = []
+    base_notes: Optional[List[str]] = []
 
 class PerfumeCreate(BaseModel):
     name: str
@@ -16,6 +19,6 @@ class PerfumeResponse(BaseModel):
     notes: Optional[FragranceNotes] = None
     main_accords: Optional[List[str]] = []
     seasonality: Optional[List[str]] = []
-    created_at: Optional[List[str]] = []
+    created_at: Optional[str] = None
 
 

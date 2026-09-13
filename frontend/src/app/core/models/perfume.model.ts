@@ -1,7 +1,10 @@
 export interface FragranceNotes {
-    top_notes: string[];
-    heart_notes: string[];
-    base_notes: string[];
+    top?: string[];
+    heart?: string[];
+    base?: string[];
+    top_notes?: string[];
+    heart_notes?: string[];
+    base_notes?: string[];
 }
 
 export interface Perfume {

@@ -46,7 +46,10 @@ async def create_perfume(perfume: PerfumeCreate):
             "notes": {
                 "top": profile.get("top_notes", []),
                 "heart": profile.get("heart_notes", []),
-                "base": profile.get("base_notes", [])
+                "base": profile.get("base_notes", []),
+                "top_notes": profile.get("top_notes", []),
+                "heart_notes": profile.get("heart_notes", []),
+                "base_notes": profile.get("base_notes", [])
             },
             "main_accords": profile.get("main_accords", []),
             "seasonality": profile.get("best_seasons", []),
