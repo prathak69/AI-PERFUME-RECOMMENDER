@@ -43,9 +43,13 @@ export class PerfumeDetail implements OnInit {
     })
   }
 
-  get bottlePlaceholder(): string {
+  get bottleImage(): string {
     const p = this.perfume();
     if (!p) return '';
-    return `https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=800&q=80`;
+    return p.image_url || `https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=800&q=80`;
+  }
+
+  get bottlePlaceholder(): string {
+    return this.bottleImage;
   }
 }

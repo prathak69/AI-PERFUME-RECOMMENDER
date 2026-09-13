@@ -12,10 +12,12 @@ class FragranceNotes(BaseModel):
 class PerfumeCreate(BaseModel):
     name: str
     brand: str
+    image_url: Optional[str] = None
 
 class PerfumeResponse(BaseModel):
     name: str
     brand: str
+    image_url: Optional[str] = None
     notes: Optional[FragranceNotes] = None
     main_accords: Optional[List[str]] = []
     seasonality: Optional[List[str]] = []

@@ -11,6 +11,7 @@ export interface Perfume {
     id?: string;
     name: string;
     brand: string;
+    image_url?: string;
     notes?: FragranceNotes;
     main_accords?: string[];
     seasonality?: string[];
@@ -19,6 +20,7 @@ export interface Perfume {
 
 export interface CreatePerfumeDto {
     name: string,
-    brand: string
+    brand: string,
+    image_url?: string
 }
 

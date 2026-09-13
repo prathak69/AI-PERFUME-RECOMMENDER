@@ -1,8 +1,6 @@
 <button routerLink="/perfume">back to collection</button>
 <p>ID: {{id()}}</p>
-
-<img [src]="bottlePlaceholder" alt="">
-
+<img [src]="bottleImage" [alt]="perfume()?.name || 'Perfume Bottle'" style="max-width: 320px; max-height: 400px; object-fit: contain; display: block; margin: 15px 0;">
 @if(perfume(); as item){
 <p>Name: {{item.name}}</p>
 <p>Brand: {{item.brand}}</p>

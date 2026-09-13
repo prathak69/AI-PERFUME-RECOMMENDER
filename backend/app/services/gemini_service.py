@@ -28,7 +28,15 @@ Respond ONLY with a valid JSON object matching this schema:
             config=types.GenerateContentConfig(response_mime_type="application/json")
         )
 
-        return json.loads(response.text)
+        raw_text = response.text.strip()
+        if raw_text.startswith("```json"):
+            raw_text = raw_text[7:]
+        elif raw_text.startswith("```"):
+            raw_text = raw_text[3:]
+        if raw_text.endswith("```"):
+            raw_text = raw_text[:-3]
+
+        return json.loads(raw_text.strip())
 
     def get_recommendation(self, perfumes:list, city:str, weather:dict, occasion:str, time_of_day: str) ->dict:
 
@@ -61,4 +69,12 @@ Respond ONLY with a JSON object matching this exact schema:
             config=types.GenerateContentConfig(response_mime_type="application/json")
         )
 
-        return json.loads(response.text)
+        raw_text = response.text.strip()
+        if raw_text.startswith("```json"):
+            raw_text = raw_text[7:]
+        elif raw_text.startswith("```"):
+            raw_text = raw_text[3:]
+        if raw_text.endswith("```"):
+            raw_text = raw_text[:-3]
+
+        return json.loads(raw_text.strip())
