@@ -2,9 +2,15 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CreatePerfumeDto, Perfume } from '../../core/models/perfume.model';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validator, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validator,
+  Validators,
+} from '@angular/forms';
 import { PerfumeService } from '../../core/services/perfume-api';
-
 
 @Component({
   standalone: true,
@@ -24,9 +30,8 @@ export class Inventory implements OnInit {
 
   perfumeForm: FormGroup = this.fb.group({
     name: ['', Validators.required],
-    brand: ['', Validators.required]
-  })
-
+    brand: ['', Validators.required],
+  });
 
   ngOnInit(): void {
     this.getInventory();
@@ -36,13 +41,13 @@ export class Inventory implements OnInit {
     this.isLoading.set(true);
     this.requestService.getInventory().subscribe({
       next: (resp) => {
-        this.perfumes.set(resp.data || [])
+        this.perfumes.set(resp.data || []);
         this.isLoading.set(false);
       },
       error: (err) => {
         this.errorMessage.set(err.error.detail || 'Something went wrong');
         this.isLoading.set(false);
-      }
+      },
     });
   }
 
@@ -65,8 +70,8 @@ export class Inventory implements OnInit {
       error: (err) => {
         this.errorMessage.set(err.error.detail || 'Something went wrong');
         this.isSubmitting.set(false);
-      }
-    })
+      },
+    });
   }
 
   deletePerfume(perfumeId: string | undefined) {
@@ -74,12 +79,12 @@ export class Inventory implements OnInit {
 
     this.requestService.deletePerfumeById(perfumeId).subscribe({
       next: (resp) => {
-        console.log("Response of delete: ", resp);
+        console.log('Response of delete: ', resp);
         this.getInventory();
       },
       error: (err) => {
         this.errorMessage.set(err.error?.detail || 'Could not delete perfume');
-      }
+      },
     });
   }
 }

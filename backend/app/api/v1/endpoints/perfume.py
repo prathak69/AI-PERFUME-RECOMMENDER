@@ -1,3 +1,4 @@
+from fastapi import Depends
 from bson import ObjectId
 from datetime import datetime, timezone
 from fastapi import APIRouter, HTTPException
@@ -5,13 +6,14 @@ from app.core.database import perfume_collection
 from app.schemas.perfume import PerfumeCreate
 from app.services.gemini_service import GeminiService
 from app.services.image_service import ImageService
+from app.api.deps import get_current_user
 
 router = APIRouter()
 gemini = GeminiService()
 
 @router.get("")
-async def list_perfume():
-    cursor = perfume_collection.find({}).sort("created_at", -1)
+async def list_perfume(current_user:dict = Depends(get_current_user)):
+    cursor = perfume_collection.find({'user_id':current_user['id']}).sort("created_at", -1)
     perfumes = await cursor.to_list(length=100)
     for p in perfumes:
         if not p.get("image_url"):
@@ -27,11 +29,11 @@ async def list_perfume():
     }
 
 @router.get("/{perfume_id}")
-async def get_perfume_by_id(perfume_id:str):
+async def get_perfume_by_id(perfume_id:str, current_user:dict = Depends(get_current_user)):
     if not ObjectId.is_valid(perfume_id):
         raise HTTPException(status_code=400, detail="Invalid bottle ID format.")
     
-    doc = await perfume_collection.find_one({"_id": ObjectId(perfume_id)})
+    doc = await perfume_collection.find_one({"_id": ObjectId(perfume_id), "user_id": current_user['id']})
     if not doc:
         raise HTTPException(status_code=404, detail="Perfume not found.")
     
@@ -50,12 +52,13 @@ async def get_perfume_by_id(perfume_id:str):
     }
 
 @router.post("")
-async def create_perfume(perfume: PerfumeCreate):
+async def create_perfume(perfume: PerfumeCreate,current_user:dict = Depends(get_current_user)):
     try:
         profile = gemini.extract_perfume_profile(perfume.name, perfume.brand)
         image_url = getattr(perfume, "image_url", None) or ImageService.get_perfume_image(perfume.name, perfume.brand)
 
         enriched_perfume = {
+            "user_id":current_user['id'],
             "name": perfume.name,
             "brand": perfume.brand,
             "image_url": image_url,
@@ -84,14 +87,16 @@ async def create_perfume(perfume: PerfumeCreate):
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.delete("/{perfume_id}")
-async def delete_perfume_by_id(perfume_id: str):
+async def delete_perfume_by_id(perfume_id: str , current_user:dict = Depends(get_current_user)):
     if not ObjectId.is_valid(perfume_id):
         raise HTTPException(status_code=400, detail="Invalid bottle ID format")
 
-    result = await perfume_collection.delete_one({"_id": ObjectId(perfume_id)})
+    result = await perfume_collection.delete_one({
+        "_id": ObjectId(perfume_id), 
+        "user_id": current_user['id']
+    })
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Perfume not found")
-    
     
     return {
         "status": "success",

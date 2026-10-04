@@ -1,17 +1,20 @@
 <button routerLink="/perfume">back to collection</button>
-<p>ID: {{id()}}</p>
-<img [src]="bottleImage" [alt]="perfume()?.name || 'Perfume Bottle'" style="max-width: 320px; max-height: 400px; object-fit: contain; display: block; margin: 15px 0;">
-@if(perfume(); as item){
-<p>Name: {{item.name}}</p>
-<p>Brand: {{item.brand}}</p>
-@if(item.notes){
-<p>Top Notes: {{(item.notes.top || item.notes.top_notes)?.join(', ') || 'N/A'}}</p>
-<p>Heart Notes: {{(item.notes.heart || item.notes.heart_notes)?.join(', ') || 'N/A'}}</p>
-<p>Base Notes: {{(item.notes.base || item.notes.base_notes)?.join(', ') || 'N/A'}}</p>
-}
-<p>Main Accords: {{item.main_accords?.join(', ') || 'N/A'}}</p>
-<p>Best Seasons: {{item.seasonality?.join(', ') || 'N/A'}}</p>
-}
-@else{
-{{errorMessage()}}
+<p>ID: {{ id() }}</p>
+<img
+  [src]="bottleImage"
+  [alt]="perfume()?.name || 'Perfume Bottle'"
+  style="max-width: 320px; max-height: 400px; object-fit: contain; display: block; margin: 15px 0"
+/>
+@if (perfume(); as item) {
+  <p>Name: {{ item.name }}</p>
+  <p>Brand: {{ item.brand }}</p>
+  @if (item.notes) {
+    <p>Top Notes: {{ (item.notes.top || item.notes.top_notes)?.join(', ') || 'N/A' }}</p>
+    <p>Heart Notes: {{ (item.notes.heart || item.notes.heart_notes)?.join(', ') || 'N/A' }}</p>
+    <p>Base Notes: {{ (item.notes.base || item.notes.base_notes)?.join(', ') || 'N/A' }}</p>
+  }
+  <p>Main Accords: {{ item.main_accords?.join(', ') || 'N/A' }}</p>
+  <p>Best Seasons: {{ item.seasonality?.join(', ') || 'N/A' }}</p>
+} @else {
+  {{ errorMessage() }}
 }

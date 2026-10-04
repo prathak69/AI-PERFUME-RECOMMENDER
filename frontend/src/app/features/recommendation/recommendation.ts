@@ -2,7 +2,12 @@ import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PerfumeService } from '../../core/services/perfume-api';
-import { RecommendResult, RecommendRequestDto, RecommendResponse, WeatherContext } from '../../core/models/recommend.model';
+import {
+  RecommendResult,
+  RecommendRequestDto,
+  RecommendResponse,
+  WeatherContext,
+} from '../../core/models/recommend.model';
 
 @Component({
   standalone: true,
@@ -24,8 +29,8 @@ export class Recommendation {
 
   recommendForm: FormGroup = this.fb.group({
     city: ['', Validators.required],
-    occasion: ['', Validators.required]
-  })
+    occasion: ['', Validators.required],
+  });
 
   onSubmit() {
     if (this.recommendForm.invalid) {
@@ -38,32 +43,32 @@ export class Recommendation {
 
     this.requestService.recommendPerfume({ city, occasion }).subscribe({
       next: (resp) => {
-        this.weather.set(resp.weather)
-        this.time_of_day.set(resp.time_of_day)
-        this.recommendation.set(resp.recommendation)
+        this.weather.set(resp.weather);
+        this.time_of_day.set(resp.time_of_day);
+        this.recommendation.set(resp.recommendation);
         this.isLoading.set(false);
       },
       error: (err) => {
-        this.errorMessage.set(err.error?.detail || "Something went wrong");
+        this.errorMessage.set(err.error?.detail || 'Something went wrong');
         this.isLoading.set(false);
-      }
+      },
     });
   }
 
   getWeatherIcon(): string {
     const rawCode = this.weather()?.w_code;
-    if (rawCode === undefined || rawCode === null) return "";
+    if (rawCode === undefined || rawCode === null) return '';
 
     const code = Number(rawCode);
-    if (isNaN(code)) return "";
+    if (isNaN(code)) return '';
 
-    if (code === 0 || code === 800) return "☀️";
-    if ((code >= 1 && code <= 3) || (code >= 801 && code <= 804)) return "🌤️";
-    if ((code >= 45 && code <= 48) || (code >= 701 && code <= 781)) return "🌫️";
-    if ((code >= 51 && code <= 67) || (code >= 300 && code <= 531)) return "🌧️";
-    if ((code >= 71 && code <= 86) || (code >= 600 && code <= 622)) return "🌨️";
-    if (code >= 95 || (code >= 200 && code <= 232)) return "🌩️";
+    if (code === 0 || code === 800) return '☀️';
+    if ((code >= 1 && code <= 3) || (code >= 801 && code <= 804)) return '🌤️';
+    if ((code >= 45 && code <= 48) || (code >= 701 && code <= 781)) return '🌫️';
+    if ((code >= 51 && code <= 67) || (code >= 300 && code <= 531)) return '🌧️';
+    if ((code >= 71 && code <= 86) || (code >= 600 && code <= 622)) return '🌨️';
+    if (code >= 95 || (code >= 200 && code <= 232)) return '🌩️';
 
-    return "";
+    return '';
   }
 }

@@ -1,11 +1,35 @@
 <h1>APP WORKS</h1>
-<nav class="nav-bar">
-  <a class="nav-bar-links-not-active" routerLink="/" routerLinkActive="nav-bar-links-active"
-    [routerLinkActiveOptions]="{exact: true}">Home</a>
+@if(auth.isAuthenticated()){
+  <nav class="nav-bar">
+  <a
+    class="nav-bar-links-not-active"
+    routerLink="/"
+    routerLinkActive="nav-bar-links-active"
+    [routerLinkActiveOptions]="{ exact: true }"
+    >Home</a
+  >
   <span> | </span>
-  <a class="nav-bar-links-not-active" routerLink="/perfume" routerLinkActive="nav-bar-links-active">Manage
-    collection</a>
+  <a class="nav-bar-links-not-active" routerLink="/perfume" routerLinkActive="nav-bar-links-active"
+    >Manage collection</a
+  >
   <span> | </span>
-  <a class="nav-bar-links-not-active" routerLink="/recommend" routerLinkActive="nav-bar-links-active">Find My Scent</a>
+  <a
+    class="nav-bar-links-not-active"
+    routerLink="/recommend"
+    routerLinkActive="nav-bar-links-active"
+    >Find My Scent</a
+  >
+  <button (click)="auth.logout()">logout</button>
 </nav>
+}
+@else {
+  <nav class="nav-bar">
+  <a
+    class="nav-bar-links-not-active"
+    routerLink="/login"
+    routerLinkActive="nav-bar-links-active"
+    >login</a
+  >
+</nav>
+}
 <router-outlet></router-outlet>
