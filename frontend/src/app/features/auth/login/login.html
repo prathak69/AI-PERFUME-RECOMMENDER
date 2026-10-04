@@ -1,13 +1,52 @@
-<h3>Login Form</h3>
+<div class="auth-page-container">
+  <div class="auth-card luxury-glass-card">
+    <div class="auth-header">
+      <span class="luxury-badge">HAUTE ATELIER ACCESS</span>
+      <h2 class="auth-title">Welcome Back</h2>
+      <p class="auth-subtitle">
+        Sign in to access your curated olfactory collection and tailored climate forecasts.
+      </p>
+    </div>
 
-<form [formGroup]="loginForm" (ngSubmit)="login()">
-  <label for="email">Email: </label>
-  <input type="email" formControlName="email" name="email" id="email" />
-  <label for="password">Password: </label>
-  <input type="password" formControlName="password" name="password" id="password" />
-  <button type="submit">submit</button>
-</form>
+    <form [formGroup]="loginForm" (ngSubmit)="login()" class="luxury-form">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input
+          type="email"
+          formControlName="email"
+          name="email"
+          id="email"
+          placeholder="curator@parfumerie.com"
+          class="luxury-input"
+        />
+      </div>
 
-<div>
-  <p>don't have an account? <a href="/auth/register">Register</a></p>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          formControlName="password"
+          name="password"
+          id="password"
+          placeholder="••••••••••••"
+          class="luxury-input"
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="btn-luxury-primary btn-auth-submit"
+        [disabled]="loginForm.invalid"
+      >
+        <span>Sign In to Atelier</span>
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <p>
+        Do not have an atelier account?
+        <a routerLink="/auth/register" class="auth-switch-link">Create Account</a>
+      </p>
+    </div>
+  </div>
 </div>

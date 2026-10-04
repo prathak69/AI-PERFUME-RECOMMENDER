@@ -1,8 +1,456 @@
-<div class="home-container">
-  <h2>Welcome to AI Perfume Recommender</h2>
-  <div class="actions">
-    <button routerLink="/recommend">Find my scent</button>
-    <span> | </span>
-    <button routerLink="/perfume">Manage collection</button>
-  </div>
+<div class="home-page-root">
+  <!-- Atmospheric Background Ambient Glows -->
+  <div class="ambient-glow ambient-glow-top-left"></div>
+  <div class="ambient-glow ambient-glow-top-right"></div>
+  <div class="ambient-glow ambient-glow-center"></div>
+
+  <!-- HERO SECTION -->
+  <section class="hero-section">
+    <div class="hero-container">
+      <!-- Left Column: Compelling Luxury Narrative & CTAs -->
+      <div class="hero-text-content">
+        <div class="luxury-badge">
+          <span class="badge-sparkle">✦</span>
+          <span>THE FIRST CLIMATE-AWARE OLFACTORY ENGINE</span>
+        </div>
+
+        <h1 class="hero-headline">
+          Find the Fragrance
+          <span class="text-gold-gradient block-headline">Written in the Air</span>
+          for You.
+        </h1>
+
+        <p class="hero-subtext">
+          Atmosphere modulates fragrance chemistry. Our bespoke AI analyzes real-time weather,
+          temperature, humidity, and personal ambiance to orchestrate your unforgettable olfactory
+          signature.
+        </p>
+
+        <!-- CTA Action Buttons -->
+        <div class="hero-actions-group">
+          <a routerLink="/recommend" class="btn-luxury-primary hero-btn-main">
+            <span>Discover My Scent</span>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+
+          @if (auth.isAuthenticated()) {
+            <a routerLink="/perfume" class="btn-luxury-outline hero-btn-sub">
+              <span>View My Vault</span>
+            </a>
+          } @else {
+            <a routerLink="/auth/register" class="btn-luxury-outline hero-btn-sub">
+              <span>Join the Atelier</span>
+            </a>
+          }
+        </div>
+
+        <!-- Trust & Value Signals -->
+        <div class="hero-metrics-strip">
+          <div class="metric-item">
+            <span class="metric-number">10,000+</span>
+            <span class="metric-label">Curated Flacons</span>
+          </div>
+          <div class="metric-divider"></div>
+          <div class="metric-item">
+            <span class="metric-number">Dynamic</span>
+            <span class="metric-label">Weather Tuning</span>
+          </div>
+          <div class="metric-divider"></div>
+          <div class="metric-item">
+            <span class="metric-number">98.4%</span>
+            <span class="metric-label">Match Harmony</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Interactive 3D Crystal Perfume Bottle Stage -->
+      <div class="hero-3d-visual">
+        <div class="bottle-pedestal-backdrop"></div>
+        <app-perfume-bottle-3d></app-perfume-bottle-3d>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE OLFACTORY NOTES TICKER / MARQUEE -->
+  <section class="notes-marquee-section">
+    <div class="marquee-track">
+      <div class="marquee-content">
+        @for (note of marqueeNotes; track note + $index) {
+          <span class="marquee-note-item">
+            <span class="diamond-sparkle">◆</span>
+            <span>{{ note }}</span>
+          </span>
+        }
+      </div>
+      <!-- Duplicate content for infinite seamless marquee loop -->
+      <div class="marquee-content" aria-hidden="true">
+        @for (note of marqueeNotes; track 'dup_' + note + $index) {
+          <span class="marquee-note-item">
+            <span class="diamond-sparkle">◆</span>
+            <span>{{ note }}</span>
+          </span>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- THE HAUTE SCIENCE: HOW AI SCENT INTELLIGENCE WORKS -->
+  <section class="science-section">
+    <div class="section-container">
+      <div class="section-header-centered">
+        <span class="luxury-badge">ALGORITHMIC ALCHEMY</span>
+        <h2 class="section-title">The Haute Science of Fragrance</h2>
+        <p class="section-subtitle">
+          How our AI calculates your perfect olfactory aura based on molecular volatility and
+          ambient environment.
+        </p>
+      </div>
+
+      <div class="pillars-grid">
+        <!-- Pillar 1 -->
+        <div class="pillar-card luxury-glass-card">
+          <div class="pillar-number-glow">01</div>
+          <div class="pillar-icon-wrapper">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              class="pillar-svg"
+            >
+              <path
+                d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
+              />
+              <circle cx="12" cy="12" r="5" />
+            </svg>
+          </div>
+          <h3 class="pillar-title">Atmospheric & Climate Calibration</h3>
+          <p class="pillar-description">
+            Perfume oils evaporate at different rates based on temperature and relative air
+            humidity. Our engine synchronizes with your local weather forecast to ensure your
+            fragrance projects without turning cloying.
+          </p>
+          <div class="pillar-tag">Real-Time Weather Matrix</div>
+        </div>
+
+        <!-- Pillar 2 -->
+        <div class="pillar-card luxury-glass-card">
+          <div class="pillar-number-glow">02</div>
+          <div class="pillar-icon-wrapper">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              class="pillar-svg"
+            >
+              <path
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+              />
+            </svg>
+          </div>
+          <h3 class="pillar-title">Occasion & Emotional Sillage</h3>
+          <p class="pillar-description">
+            From intimate black-tie galas and boardroom discussions to sunlit coastal escapes, we
+            align note intensity, longevity, and radius with the exact ambiance you wish to project.
+          </p>
+          <div class="pillar-tag">Contextual Projection</div>
+        </div>
+
+        <!-- Pillar 3 -->
+        <div class="pillar-card luxury-glass-card">
+          <div class="pillar-number-glow">03</div>
+          <div class="pillar-icon-wrapper">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              class="pillar-svg"
+            >
+              <path d="M10 2v7.31M14 9.3V2M8.5 2h7M14 9.3a6.5 6.5 0 1 1-4 0" />
+              <path d="M5.52 16h12.96" />
+            </svg>
+          </div>
+          <h3 class="pillar-title">Pyramid Accord Harmonic Modeling</h3>
+          <p class="pillar-description">
+            We evaluate top, heart, and base notes across thousands of designer and niche houses,
+            predicting dry-down curves to eliminate olfactive blind spots and ensure seamless
+            all-day elegance.
+          </p>
+          <div class="pillar-tag">Molecular Note Symmetry</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WEATHER HARMONY DEMONSTRATOR -->
+  <section class="weather-demo-section">
+    <div class="section-container">
+      <div class="weather-demo-card luxury-glass-card">
+        <div class="demo-content">
+          <span class="luxury-badge">CLIMATE INTELLIGENCE</span>
+          <h2 class="demo-title">How Weather Modulates Your Sillage</h2>
+          <p class="demo-text">
+            On cold winter evenings, dense notes like Cambodian Oud and Bourbon Vanilla bloom gently
+            without overwhelming. In humid Mediterranean summers, sparkling Calabrian Bergamot and
+            ozone accords cut through heat with radiant freshness.
+          </p>
+
+          <div class="weather-comparison-grid">
+            <div class="weather-scenario cold-scenario">
+              <div class="scenario-badge">❄️ Crisp Winter Evening (6°C / 42°F)</div>
+              <h4 class="scenario-accord">Dense Resins & Warm Gourmand</h4>
+              <p class="scenario-desc">
+                Low volatility requires heavier molecular weights to generate projection and warm
+                comfort.
+              </p>
+              <div class="scenario-notes">
+                <span>Tonka</span>
+                <span>Amber</span>
+                <span>Spiced Rum</span>
+              </div>
+            </div>
+
+            <div class="weather-scenario warm-scenario">
+              <div class="scenario-badge">☀️ Sunlit Summer Noon (30°C / 86°F)</div>
+              <h4 class="scenario-accord">Solar Citrus & Ozonics</h4>
+              <p class="scenario-desc">
+                High volatility accelerates diffusion; lighter airy accords radiate effortlessly
+                without suffocating.
+              </p>
+              <div class="scenario-notes">
+                <span>Bergamot</span>
+                <span>Sea Mist</span>
+                <span>Neroli</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="demo-cta-row">
+            <a routerLink="/recommend" class="btn-luxury-primary">
+              <span>Test AI Weather Matching in Your City</span>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CURATED FRAGRANCE FAMILIES -->
+  <section class="families-section">
+    <div class="section-container">
+      <div class="section-header-centered">
+        <span class="luxury-badge">CURATED OLFACTORY REPERTOIRE</span>
+        <h2 class="section-title">Explore Iconic Accord Families</h2>
+        <p class="section-subtitle">
+          Masterfully categorized fragrance structures tailored to every season and aesthetic mood.
+        </p>
+      </div>
+
+      <div class="families-grid">
+        @for (family of fragranceFamilies; track family.title) {
+          <div class="family-card luxury-glass-card" [style.background]="family.gradient">
+            <div class="family-header">
+              <span class="family-tag">{{ family.tag }}</span>
+              <span class="family-category">{{ family.category }}</span>
+            </div>
+
+            <h3 class="family-title">{{ family.title }}</h3>
+            <p class="family-description">{{ family.description }}</p>
+
+            <div class="family-notes-pills">
+              @for (note of family.notes; track note) {
+                <span class="family-note-pill">
+                  <span class="pill-spark">✦</span>
+                  {{ note }}
+                </span>
+              }
+            </div>
+
+            <a routerLink="/recommend" class="family-link-action">
+              <span>Match in Scent Finder</span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- EDITORIAL REVIEWS -->
+  <section class="editorial-section">
+    <div class="section-container">
+      <div class="section-header-centered">
+        <span class="luxury-badge">PRAISE & REVIEWS</span>
+        <h2 class="section-title">The Voice of Haute Parfumerie</h2>
+      </div>
+
+      <div class="editorial-grid">
+        <div class="quote-card luxury-glass-card">
+          <div class="quote-stars">★★★★★</div>
+          <p class="quote-body">
+            "A revelation. The atmospheric calibration paired me with a fragrance that transformed a
+            drizzly London afternoon into an unforgettable olfactory statement."
+          </p>
+          <div class="quote-author">
+            <span class="author-name">Éléonore de Vance</span>
+            <span class="author-role">Fragrance Critic, L'Artisan Curateur</span>
+          </div>
+        </div>
+
+        <div class="quote-card luxury-glass-card">
+          <div class="quote-stars">★★★★★</div>
+          <p class="quote-body">
+            "No more blind-buying regrets. AURA understands note synergy and temperature physics
+            better than any luxury boutique consultant I have visited."
+          </p>
+          <div class="quote-author">
+            <span class="author-name">Julian Sterling</span>
+            <span class="author-role">Collector & Scent Sommelier</span>
+          </div>
+        </div>
+
+        <div class="quote-card luxury-glass-card">
+          <div class="quote-stars">★★★★★</div>
+          <p class="quote-body">
+            "The 3D interactive atelier experience and precise climate-driven scent logic make this
+            an absolute masterpiece of modern digital luxury."
+          </p>
+          <div class="quote-author">
+            <span class="author-name">Camilla Rossi</span>
+            <span class="author-role">Haute Parfumerie Editor</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ATELIER INVITATION BANNER -->
+  <section class="atelier-invitation-section">
+    <div class="section-container">
+      <div class="invitation-banner luxury-glass-card">
+        <div class="invitation-glow"></div>
+        <div class="invitation-content">
+          <span class="luxury-badge">BEGIN YOUR SCENT ODYSSEY</span>
+          <h2 class="invitation-title">Ready to Discover Your Signature Scent?</h2>
+          <p class="invitation-subtitle">
+            Enter your city and occasion to receive your AI-curated olfactory recommendation in
+            seconds.
+          </p>
+          <div class="invitation-actions">
+            <a routerLink="/recommend" class="btn-luxury-primary btn-large">
+              <span>Start Free Scent Consultation</span>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.2"
+              >
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+            @if (auth.isAuthenticated()) {
+              <a routerLink="/perfume" class="btn-luxury-outline btn-large">
+                <span>Manage Collection</span>
+              </a>
+            } @else {
+              <a routerLink="/auth/register" class="btn-luxury-outline btn-large">
+                <span>Create Atelier Account</span>
+              </a>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ATELIER FOOTER -->
+  <footer class="atelier-footer">
+    <div class="footer-container">
+      <div class="footer-top-row">
+        <div class="footer-brand">
+          <div class="footer-logo">A U R A</div>
+          <span class="footer-sub">HAUTE PARFUMERIE & AI SCENT INTELLIGENCE</span>
+          <p class="footer-bio">
+            Algorithmic fragrance discovery harmonized with real-time atmospheric conditions,
+            emotional aura, and artisanal French perfumery.
+          </p>
+        </div>
+
+        <div class="footer-links-col">
+          <h5 class="footer-heading">Atelier</h5>
+          <a routerLink="/" class="footer-link">Home Atelier</a>
+          <a routerLink="/recommend" class="footer-link">Find My Scent</a>
+          <a routerLink="/perfume" class="footer-link">Fragrance Vault</a>
+        </div>
+
+        <div class="footer-links-col">
+          <h5 class="footer-heading">Olfactory Families</h5>
+          <span class="footer-link">Woody Amber</span>
+          <span class="footer-link">Solar Citrus</span>
+          <span class="footer-link">Floral Gourmand</span>
+          <span class="footer-link">Aromatic Leather</span>
+        </div>
+
+        <div class="footer-links-col">
+          <h5 class="footer-heading">Account</h5>
+          @if (auth.isAuthenticated()) {
+            <span class="footer-link" (click)="auth.logout()">Sign Out</span>
+          } @else {
+            <a routerLink="/auth/login" class="footer-link">Sign In</a>
+            <a routerLink="/auth/register" class="footer-link">Register Atelier Account</a>
+          }
+        </div>
+      </div>
+
+      <div class="footer-bottom-row">
+        <span class="copyright">© 2026 AURA Parfumerie Intelligence. All rights reserved.</span>
+        <div class="footer-meta-tags">
+          <span>PARIS</span>
+          <span>•</span>
+          <span>MILAN</span>
+          <span>•</span>
+          <span>NEW YORK</span>
+          <span>•</span>
+          <span>TOKYO</span>
+        </div>
+      </div>
+    </div>
+  </footer>
 </div>

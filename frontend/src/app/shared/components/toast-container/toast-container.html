@@ -1,0 +1,45 @@
+<aside class="fragrance-cloud-toaster" aria-live="polite" aria-label="Olfactory Notifications">
+  @for (toast of toastService.toasts(); track toast.id) {
+    <div
+      class="scent-cloud-toast"
+      [class.toast-gold]="toast.type === 'success'"
+      [class.toast-crimson]="toast.type === 'error'"
+      [class.toast-violet]="toast.type === 'info'"
+      [class.toast-amber]="toast.type === 'warning'"
+    >
+      <!-- Scent Mist Vapor Aura Ring -->
+      <div class="mist-aura-glow"></div>
+      <div class="mist-particle p1"></div>
+      <div class="mist-particle p2"></div>
+      <div class="mist-particle p3"></div>
+
+      <!-- Icon & Fragrance Emblem -->
+      <div class="toast-emblem">
+        <span class="emblem-glyph">{{ toast.icon }}</span>
+      </div>
+
+      <!-- Content -->
+      <div class="toast-body">
+        <h4 class="toast-title">{{ toast.title }}</h4>
+        @if (toast.message) {
+          <p class="toast-desc">{{ toast.message }}</p>
+        }
+      </div>
+
+      <!-- Close Button -->
+      <button
+        type="button"
+        class="toast-close-btn"
+        (click)="dismiss(toast)"
+        aria-label="Dismiss notification"
+      >
+        ✕
+      </button>
+
+      <!-- Liquid Scent Sillage Progress Bar -->
+      @if (toast.duration > 0) {
+        <div class="liquid-progress-bar" [style.animation-duration.ms]="toast.duration"></div>
+      }
+    </div>
+  }
+</aside>

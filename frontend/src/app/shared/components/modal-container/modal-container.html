@@ -1,0 +1,89 @@
+@if (modalService.activeModal(); as modal) {
+  <div
+    class="luxury-modal-backdrop"
+    (click)="onBackdropClick($event)"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-label]="modal.options.title"
+  >
+    <div
+      class="luxury-modal-card"
+      [class.modal-type-danger]="modal.options.type === 'danger'"
+      [class.modal-type-warning]="modal.options.type === 'warning'"
+      [class.modal-type-info]="modal.options.type === 'info'"
+    >
+      <!-- Atmospheric Backdrop Glow -->
+      <div class="modal-ambient-glow"></div>
+
+      <!-- Header Icon & Emblem -->
+      <div class="modal-emblem-wrapper">
+        <div class="modal-emblem">
+          @if (modal.options.type === 'danger') {
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path
+                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+              ></path>
+            </svg>
+          } @else {
+            <span class="emblem-sparkle">✦</span>
+          }
+        </div>
+      </div>
+
+      <!-- Title & Message -->
+      <div class="modal-content-area">
+        <h3 class="modal-title">{{ modal.options.title }}</h3>
+        <p class="modal-message">{{ modal.options.message }}</p>
+
+        <!-- Optional Flacon Mini Preview Card -->
+        @if (modal.options.flaconName) {
+          <div class="flacon-preview-card">
+            @if (modal.options.flaconImage) {
+              <img
+                [src]="modal.options.flaconImage"
+                [alt]="modal.options.flaconName"
+                class="flacon-preview-thumb"
+                referrerpolicy="no-referrer"
+              />
+            }
+            <div class="flacon-preview-text">
+              <span class="preview-brand">{{
+                modal.options.flaconBrand || 'Haute Parfumerie'
+              }}</span>
+              <h5 class="preview-name">{{ modal.options.flaconName }}</h5>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="modal-actions-row">
+        <button type="button" class="btn-modal-cancel" (click)="cancel()">
+          {{ modal.options.cancelText }}
+        </button>
+
+        <button
+          type="button"
+          class="btn-modal-confirm"
+          [class.btn-danger]="modal.options.type === 'danger'"
+          (click)="confirm()"
+        >
+          {{ modal.options.confirmText }}
+        </button>
+      </div>
+
+      <!-- Close 'X' Button -->
+      <button type="button" class="modal-close-x" (click)="cancel()" aria-label="Close dialog">
+        ✕
+      </button>
+    </div>
+  </div>
+}

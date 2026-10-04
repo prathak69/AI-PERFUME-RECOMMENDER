@@ -16,7 +16,7 @@ async def list_perfume(current_user:dict = Depends(get_current_user)):
     cursor = perfume_collection.find({'user_id':current_user['id']}).sort("created_at", -1)
     perfumes = await cursor.to_list(length=100)
     for p in perfumes:
-        if not p.get("image_url"):
+        if ImageService.is_invalid_or_fallback_image(p.get("image_url"), p.get("name", "")):
             img = ImageService.get_perfume_image(p.get("name", ""), p.get("brand", ""))
             if img:
                 await perfume_collection.update_one({"_id": p["_id"]}, {"$set": {"image_url": img}})
@@ -37,8 +37,8 @@ async def get_perfume_by_id(perfume_id:str, current_user:dict = Depends(get_curr
     if not doc:
         raise HTTPException(status_code=404, detail="Perfume not found.")
     
-    # Backfill image_url for existing bottles if missing
-    if not doc.get("image_url"):
+    # Backfill or auto-repair image_url if missing, blocked, or generic fallback
+    if ImageService.is_invalid_or_fallback_image(doc.get("image_url"), doc.get("name", "")):
         fetched_img = ImageService.get_perfume_image(doc.get("name", ""), doc.get("brand", ""))
         if fetched_img:
             await perfume_collection.update_one({"_id": doc["_id"]}, {"$set": {"image_url": fetched_img}})
@@ -82,9 +82,11 @@ async def create_perfume(perfume: PerfumeCreate,current_user:dict = Depends(get_
             "status":"success",
             "data": enriched_perfume
         }
-    
-    except HTTPException as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error creating perfume: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to add perfume: {str(e)}")
 
 @router.delete("/{perfume_id}")
 async def delete_perfume_by_id(perfume_id: str , current_user:dict = Depends(get_current_user)):

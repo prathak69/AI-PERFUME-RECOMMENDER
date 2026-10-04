@@ -1,0 +1,93 @@
+<div class="bottle-3d-stage">
+  <!-- Dynamic Luminous Aura Backdrop -->
+  <div
+    class="bottle-aura-glow"
+    [style.background]="
+      'radial-gradient(circle, ' + currentMood().glowColor + ' 0%, transparent 68%)'
+    "
+  ></div>
+
+  <!-- Interactive 3D Canvas -->
+  <div
+    class="canvas-container"
+    (pointerdown)="onPointerDown($event)"
+    (pointermove)="onPointerMove($event)"
+    (pointerup)="onPointerUp()"
+    (pointerleave)="onPointerUp()"
+    (click)="spritzFragrance()"
+    title="Drag to inspect • Click to spritz fragrance"
+  >
+    <canvas #rendererCanvas></canvas>
+
+    <!-- Spraying Flash Indicator -->
+    @if (isSpraying()) {
+      <div class="spray-burst-overlay">
+        <span class="scent-vapor-text">Eau de Parfum Diffusing...</span>
+      </div>
+    }
+
+    <!-- 3D Hint Badge -->
+    <div class="drag-hint-pill">
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+      </svg>
+      <span>360° Crystal Flacon • Click to Spritz</span>
+    </div>
+  </div>
+
+  <!-- Mood Switcher & Olfactory Pyramid Card -->
+  <div class="mood-controls-panel">
+    <div class="mood-selector-bar">
+      @for (mood of moods; track mood.id; let idx = $index) {
+        <button
+          type="button"
+          class="mood-chip"
+          [class.active]="activeMoodIndex() === idx"
+          (click)="selectMood(idx)"
+        >
+          <span class="mood-gem-dot" [style.background]="mood.glowColor"></span>
+          <span class="mood-name">{{ mood.name }}</span>
+        </button>
+      }
+    </div>
+
+    <!-- Active Mood Accord Details -->
+    <div class="scent-notes-card">
+      <div class="notes-header">
+        <div class="notes-title-group">
+          <span class="scent-category-label">{{ currentMood().subtitle }}</span>
+          <h4 class="scent-display-title">{{ currentMood().name }}</h4>
+        </div>
+
+        <button
+          type="button"
+          class="btn-spritz-action"
+          (click)="spritzFragrance()"
+          [class.spraying]="isSpraying()"
+        >
+          <span class="spritz-icon">💨</span>
+          <span>Spritz Tester</span>
+          @if (sprayCount() > 0) {
+            <span class="spritz-count">{{ sprayCount() }}</span>
+          }
+        </button>
+      </div>
+
+      <div class="notes-pills-row">
+        @for (note of currentMood().notes; track note) {
+          <span class="accord-pill">
+            <span class="accord-spark">✦</span>
+            {{ note }}
+          </span>
+        }
+      </div>
+    </div>
+  </div>
+</div>
