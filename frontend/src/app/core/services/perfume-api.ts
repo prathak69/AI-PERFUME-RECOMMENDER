@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ApiResponse } from '../models/api-response.model';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { CreatePerfumeDto, Perfume } from '../models/perfume.model';
 import { RecommendRequestDto, RecommendResponse } from '../models/recommend.model';
 
