@@ -9,6 +9,8 @@ import {
   WeatherContext,
 } from '../../core/models/recommend.model';
 
+import { ToastService } from '../../core/services/toast.service';
+
 @Component({
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
@@ -19,6 +21,7 @@ import {
 export class Recommendation {
   private readonly fb = inject(FormBuilder);
   private readonly requestService = inject(PerfumeService);
+  readonly toastService = inject(ToastService);
 
   errorMessage = signal<string>('');
   isLoading = signal<boolean>(false);
@@ -47,9 +50,15 @@ export class Recommendation {
         this.time_of_day.set(resp.time_of_day);
         this.recommendation.set(resp.recommendation);
         this.isLoading.set(false);
+        this.toastService.info(
+          'Olfactory Match Tailored',
+          `AI selected ${resp.recommendation.recommended_perfume} for ${resp.weather.condition} weather in ${city}.`,
+        );
       },
       error: (err) => {
-        this.errorMessage.set(err.error?.detail || 'Something went wrong');
+        const msg = err.error?.detail || 'Something went wrong';
+        this.errorMessage.set(msg);
+        this.toastService.error('Consultation Failed', msg);
         this.isLoading.set(false);
       },
     });

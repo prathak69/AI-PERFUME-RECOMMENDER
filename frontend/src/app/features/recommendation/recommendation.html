@@ -1,27 +1,237 @@
-<p>recommendation works!</p>
+<div class="consultation-page">
+  <div class="consultation-header">
+    <span class="luxury-badge">BESPOKE OLFACTORY CONSULTATION</span>
+    <h1 class="consultation-title">Find Your Signature Scent</h1>
+    <p class="consultation-subtitle">
+      Input your geographical destination and event context. Our neural engine synthesizes current
+      meteorological telemetry to calculate your optimal fragrance match.
+    </p>
+  </div>
 
-<form [formGroup]="recommendForm">
-  <label for="city">City: </label>
-  <input formControlName="city" placeholder="city" id="city" type="text" /><br />
-  <label for="occasion">Occasion: </label>
-  <input formControlName="occasion" placeholder="occasion" id="occasion" type="text" /><br />
-  <button type="submit" [disabled]="isLoading()" (click)="onSubmit()">
-    @if (isLoading()) {
-      <span>getting result..</span>
-    } @else {
-      <span>recommend</span>
-    }
-  </button>
-</form>
+  <div class="consultation-layout">
+    <!-- Form Card -->
+    <div class="consultation-form-card luxury-glass-card">
+      <h3 class="card-section-title">Atmospheric Parameters</h3>
 
-@if (errorMessage()) {
-  <p>{{ errorMessage() }}</p>
-} @else {
-  <p>{{ recommendation()?.recommended_perfume | titlecase }}</p>
-  <p>{{ recommendation()?.reasoning }}</p>
-  <p>{{ weather()?.temp }}</p>
-  <p>{{ weather()?.condition }}</p>
-  <p>{{ weather()?.description }}</p>
-  <p>{{ weather()?.humidity }}</p>
-  <p>{{ getWeatherIcon() }}</p>
-}
+      <form [formGroup]="recommendForm" (ngSubmit)="onSubmit()" class="luxury-form">
+        <div class="form-group">
+          <label for="city">City / Destination</label>
+          <div class="input-with-icon">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="input-icon"
+            >
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <input
+              formControlName="city"
+              placeholder="e.g. Paris, Tokyo, Florence, New York"
+              id="city"
+              type="text"
+              class="luxury-input"
+            />
+          </div>
+          <!-- Quick Suggestion Pills -->
+          <div class="quick-pills-row">
+            <button
+              type="button"
+              class="quick-pill"
+              (click)="recommendForm.patchValue({ city: 'Paris' })"
+            >
+              Paris
+            </button>
+            <button
+              type="button"
+              class="quick-pill"
+              (click)="recommendForm.patchValue({ city: 'Kyoto' })"
+            >
+              Kyoto
+            </button>
+            <button
+              type="button"
+              class="quick-pill"
+              (click)="recommendForm.patchValue({ city: 'Florence' })"
+            >
+              Florence
+            </button>
+            <button
+              type="button"
+              class="quick-pill"
+              (click)="recommendForm.patchValue({ city: 'London' })"
+            >
+              London
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="occasion">Occasion / Desired Aura</label>
+          <div class="input-with-icon">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="input-icon"
+            >
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+              ></polygon>
+            </svg>
+            <input
+              formControlName="occasion"
+              placeholder="e.g. Black-tie Gala, Rooftop Sunset, Rainy Bookstore, Summer Garden Party"
+              id="occasion"
+              type="text"
+              class="luxury-input"
+            />
+          </div>
+          <!-- Quick Suggestion Pills -->
+          <div class="quick-pills-row">
+            <button
+              type="button"
+              class="quick-pill"
+              (click)="recommendForm.patchValue({ occasion: 'Evening Gala' })"
+            >
+              Evening Gala
+            </button>
+            <button
+              type="button"
+              class="quick-pill"
+              (click)="recommendForm.patchValue({ occasion: 'Autumn Coffee Date' })"
+            >
+              Coffee Date
+            </button>
+            <button
+              type="button"
+              class="quick-pill"
+              (click)="recommendForm.patchValue({ occasion: 'Executive Meeting' })"
+            >
+              Executive
+            </button>
+            <button
+              type="button"
+              class="quick-pill"
+              (click)="recommendForm.patchValue({ occasion: 'Mediterranean Cruise' })"
+            >
+              Cruise
+            </button>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="btn-luxury-primary btn-submit-recommend"
+          [disabled]="isLoading() || recommendForm.invalid"
+        >
+          @if (isLoading()) {
+            <span class="spinner-dot"></span>
+            <span>Calculating Scent Alchemy...</span>
+          } @else {
+            <span>✨ Reveal My Fragrance Match</span>
+          }
+        </button>
+      </form>
+
+      @if (errorMessage()) {
+        <div class="error-banner">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+          <span>{{ errorMessage() }}</span>
+        </div>
+      }
+    </div>
+
+    <!-- Results Panel -->
+    <div class="consultation-result-panel">
+      @if (recommendation()) {
+        <div class="result-card luxury-glass-card animate-fade-in">
+          <!-- Weather Bar -->
+          @if (weather()) {
+            <div class="weather-telemetry-strip">
+              <div class="weather-main-info">
+                <span class="weather-emoji-icon">{{ getWeatherIcon() }}</span>
+                <div>
+                  <span class="weather-temperature">{{ weather()?.temp }}°C</span>
+                  <span class="weather-condition-badge">{{
+                    weather()?.condition || weather()?.description
+                  }}</span>
+                </div>
+              </div>
+
+              <div class="weather-meta-items">
+                <div class="weather-meta-cell">
+                  <span class="meta-label">Humidity</span>
+                  <span class="meta-val">{{ weather()?.humidity }}%</span>
+                </div>
+                @if (time_of_day()) {
+                  <div class="weather-meta-cell">
+                    <span class="meta-label">Circadian Shift</span>
+                    <span class="meta-val">{{ time_of_day() | titlecase }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Perfume Recommendation Highlight -->
+          <div class="recommendation-hero-body">
+            <span class="recommendation-eyebrow">YOUR AI BESPOKE SELECTION</span>
+            <h2 class="perfume-name-title text-gold-gradient">
+              {{ recommendation()?.recommended_perfume | titlecase }}
+            </h2>
+
+            <div class="reasoning-box">
+              <h4 class="reasoning-heading">Olfactory Rationale</h4>
+              <p class="reasoning-text">{{ recommendation()?.reasoning }}</p>
+            </div>
+
+            <div class="action-footer">
+              <a routerLink="/perfume" class="btn-luxury-outline">
+                <span>Browse in Vault</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      } @else {
+        <!-- Empty State with Luxury Mood Visual -->
+        <div class="empty-state-card luxury-glass-card">
+          <div class="empty-icon-ring">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              class="empty-svg"
+            >
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+          </div>
+          <h4 class="empty-title">Awaiting Atmosphere Coordinates</h4>
+          <p class="empty-desc">
+            Provide a city and occasion on the left to activate the atmospheric sensory simulation
+            and reveal your harmonized perfume match.
+          </p>
+        </div>
+      }
+    </div>
+  </div>
+</div>

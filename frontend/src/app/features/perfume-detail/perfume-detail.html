@@ -1,20 +1,335 @@
-<button routerLink="/perfume">back to collection</button>
-<p>ID: {{ id() }}</p>
-<img
-  [src]="bottleImage"
-  [alt]="perfume()?.name || 'Perfume Bottle'"
-  style="max-width: 320px; max-height: 400px; object-fit: contain; display: block; margin: 15px 0"
-/>
-@if (perfume(); as item) {
-  <p>Name: {{ item.name }}</p>
-  <p>Brand: {{ item.brand }}</p>
-  @if (item.notes) {
-    <p>Top Notes: {{ (item.notes.top || item.notes.top_notes)?.join(', ') || 'N/A' }}</p>
-    <p>Heart Notes: {{ (item.notes.heart || item.notes.heart_notes)?.join(', ') || 'N/A' }}</p>
-    <p>Base Notes: {{ (item.notes.base || item.notes.base_notes)?.join(', ') || 'N/A' }}</p>
-  }
-  <p>Main Accords: {{ item.main_accords?.join(', ') || 'N/A' }}</p>
-  <p>Best Seasons: {{ item.seasonality?.join(', ') || 'N/A' }}</p>
-} @else {
-  {{ errorMessage() }}
-}
+<div class="perfume-detail-root">
+  <!-- Atmospheric Ambient Background Orbs -->
+  <div class="detail-ambient-glow glow-top"></div>
+  <div class="detail-ambient-glow glow-bottom"></div>
+
+  <div class="detail-page-container">
+    <!-- Top Action Bar -->
+    <div class="detail-top-nav">
+      <a routerLink="/perfume" class="btn-back-link">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>Return to Fragrance Wardrobe</span>
+      </a>
+
+      @if (perfume(); as item) {
+        <div class="flacon-id-chip">
+          <span class="id-sparkle">✦</span>
+          <span>Archive Flacon #{{ item.id ? item.id.slice(-6).toUpperCase() : 'N/A' }}</span>
+        </div>
+      }
+    </div>
+
+    <!-- Main Detail Content -->
+    @if (isLoading()) {
+      <div class="loading-detail-stage luxury-glass-card">
+        <div class="loading-spinner"></div>
+        <h3 class="loading-title">Unveiling Olfactory Anatomy...</h3>
+        <p class="loading-sub">Calibrating top, heart, and base notes</p>
+      </div>
+    } @else if (errorMessage()) {
+      <div class="error-detail-stage luxury-glass-card">
+        <div class="error-icon">⚠️</div>
+        <h3>Unable to Retrieve Flacon</h3>
+        <p>{{ errorMessage() }}</p>
+        <a routerLink="/perfume" class="btn-luxury-outline">Back to Wardrobe</a>
+      </div>
+    } @else if (perfume(); as item) {
+      <div class="detail-main-layout">
+        <!-- LEFT: Showcase Stage with Flying Olfactory Notes -->
+        <!-- LEFT: Showcase Stage with Flying Olfactory Notes -->
+        <div
+          #stageRef
+          class="flacon-showcase-stage luxury-glass-card"
+          (mousemove)="onMouseMove($event)"
+          (mouseleave)="onMouseLeave()"
+          (click)="triggerScentShockwave($event)"
+        >
+          <!-- Background Scent Aura Ring -->
+          <div class="scent-aura-ring"></div>
+          <div class="scent-aura-core-glow"></div>
+
+          <!-- Interactive Scent Aerosol Vapor Canvas -->
+          <canvas #vaporCanvas class="vapor-canvas"></canvas>
+
+          <!-- FLOATING / FLYING NOTES EFFECT WITH DYNAMIC CURSOR DISPERSION -->
+          <div class="flying-notes-layer" aria-hidden="true">
+            @for (note of floatingNotes(); track note.name + $index) {
+              <div
+                class="flying-note-anchor"
+                [style.top.%]="note.topPercent"
+                [style.left.%]="note.leftPercent"
+                [style.transform]="getNoteTransform(note.id)"
+              >
+                <div
+                  class="flying-note-pill"
+                  [class.note-type-top]="note.type === 'top'"
+                  [class.note-type-heart]="note.type === 'heart'"
+                  [class.note-type-base]="note.type === 'base'"
+                  [style.animation-delay.s]="note.delaySec"
+                  [style.animation-duration.s]="note.durationSec"
+                >
+                  <span class="note-glyph">
+                    @switch (note.type) {
+                      @case ('top') {
+                        ✧
+                      }
+                      @case ('heart') {
+                        ✦
+                      }
+                      @case ('base') {
+                        ◆
+                      }
+                    }
+                  </span>
+                  <span class="note-text">{{ note.name }}</span>
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- Flacon Photo Display with Parallax -->
+          <div
+            class="flacon-image-frame"
+            [class.burst-pulse]="isBursting()"
+            [style.transform]="
+              'perspective(800px) rotateY(' + mouseTiltX() + 'deg) rotateX(' + mouseTiltY() + 'deg)'
+            "
+          >
+            <div class="specular-reflection"></div>
+            <img
+              [src]="bottleImage"
+              [alt]="item.name"
+              class="flacon-hero-img"
+              referrerpolicy="no-referrer"
+              (error)="onImageError($event)"
+            />
+            <div class="flacon-concentration-badge">
+              <span>EXTRAIT DE PARFUM</span>
+            </div>
+          </div>
+
+          <!-- Scent Vibe Tagline -->
+          <div class="flacon-stage-footer">
+            <span class="interaction-hint"
+              >✨ Move cursor to disperse olfactory notes • Click for scent shockwave</span
+            >
+          </div>
+        </div>
+
+        <!-- RIGHT: Olfactory Pyramid & Specifications -->
+        <div class="flacon-info-column">
+          <!-- Title & House -->
+          <div class="flacon-title-card luxury-glass-card">
+            <span class="flacon-brand-label">{{ item.brand | uppercase }}</span>
+            <h1 class="flacon-hero-title text-gold-gradient">{{ item.name | titlecase }}</h1>
+
+            <div class="flacon-meta-pills">
+              <span class="spec-pill">
+                <span class="pill-dot"></span>
+                <span>Signature Flacon</span>
+              </span>
+              <span class="spec-pill">
+                <span>Longevity: 8 - 12h</span>
+              </span>
+              <span class="spec-pill">
+                <span>Projection: Enveloping</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- THE OLFACTORY PYRAMID -->
+          <div class="olfactory-pyramid-card luxury-glass-card">
+            <div class="pyramid-card-header">
+              <span class="luxury-badge">PYRAMID ARCHITECTURE</span>
+              <h3 class="pyramid-card-title">Olfactory Progression</h3>
+            </div>
+
+            <div class="pyramid-levels-stack">
+              <!-- TOP NOTES -->
+              <div class="pyramid-level level-top">
+                <div class="level-header">
+                  <div class="level-identity">
+                    <span class="level-icon-badge">✧</span>
+                    <div>
+                      <h4 class="level-title">Top Notes</h4>
+                      <span class="level-timing">Opening Impact • First 15–30 minutes</span>
+                    </div>
+                  </div>
+                  <span class="level-volatility">High Volatility</span>
+                </div>
+                <div class="notes-chip-row">
+                  @if (topNotes().length > 0) {
+                    @for (note of topNotes(); track note) {
+                      <span class="pyramid-note-chip chip-top">
+                        <span class="chip-spark">✦</span>
+                        <span>{{ note }}</span>
+                      </span>
+                    }
+                  } @else {
+                    <span class="notes-empty">Sparkling Citrus, Pink Pepper</span>
+                  }
+                </div>
+              </div>
+
+              <!-- HEART NOTES -->
+              <div class="pyramid-level level-heart">
+                <div class="level-header">
+                  <div class="level-identity">
+                    <span class="level-icon-badge">✦</span>
+                    <div>
+                      <h4 class="level-title">Heart Notes</h4>
+                      <span class="level-timing">The Scent Soul • 2 to 4 hours</span>
+                    </div>
+                  </div>
+                  <span class="level-volatility">Medium Volatility</span>
+                </div>
+                <div class="notes-chip-row">
+                  @if (heartNotes().length > 0) {
+                    @for (note of heartNotes(); track note) {
+                      <span class="pyramid-note-chip chip-heart">
+                        <span class="chip-spark">✦</span>
+                        <span>{{ note }}</span>
+                      </span>
+                    }
+                  } @else {
+                    <span class="notes-empty">Damask Rose, Spiced Lavender</span>
+                  }
+                </div>
+              </div>
+
+              <!-- BASE NOTES -->
+              <div class="pyramid-level level-base">
+                <div class="level-header">
+                  <div class="level-identity">
+                    <span class="level-icon-badge">◆</span>
+                    <div>
+                      <h4 class="level-title">Base Notes</h4>
+                      <span class="level-timing">Memory & Drydown • 6 to 12+ hours</span>
+                    </div>
+                  </div>
+                  <span class="level-volatility">Low Volatility</span>
+                </div>
+                <div class="notes-chip-row">
+                  @if (baseNotes().length > 0) {
+                    @for (note of baseNotes(); track note) {
+                      <span class="pyramid-note-chip chip-base">
+                        <span class="chip-spark">✦</span>
+                        <span>{{ note }}</span>
+                      </span>
+                    }
+                  } @else {
+                    <span class="notes-empty">Ambroxan, Cedarwood, Bourbon Vanilla</span>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- MAIN ACCORDS SPECTRUM -->
+          @if (item.main_accords && item.main_accords.length > 0) {
+            <div class="accords-card luxury-glass-card">
+              <h4 class="accords-card-title">Main Accord Harmony</h4>
+              <div class="accords-grid">
+                @for (accord of item.main_accords; track accord) {
+                  <div class="accord-bar-item">
+                    <div class="accord-label-row">
+                      <span class="accord-title">{{ accord | titlecase }}</span>
+                      <span class="accord-pct">Dominant</span>
+                    </div>
+                    <div class="accord-track">
+                      <div class="accord-fill"></div>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- SEASONALITY / WEAR CALENDAR -->
+          <div class="seasonality-card luxury-glass-card">
+            <h4 class="seasonality-title">Optimal Climate & Seasonality</h4>
+            <div class="seasons-grid">
+              @for (season of seasons; track season) {
+                <div class="season-box" [class.active-season]="isSeasonActive(season)">
+                  <span class="season-symbol">
+                    @switch (season) {
+                      @case ('Spring') {
+                        🌸
+                      }
+                      @case ('Summer') {
+                        ☀️
+                      }
+                      @case ('Autumn') {
+                        🍂
+                      }
+                      @case ('Winter') {
+                        ❄️
+                      }
+                    }
+                  </span>
+                  <span class="season-name">{{ season }}</span>
+                  <span class="season-status">
+                    {{ isSeasonActive(season) ? 'Optimal' : 'Subtle' }}
+                  </span>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- ACTION FOOTER -->
+          <div class="detail-actions-row">
+            <a routerLink="/recommend" class="btn-luxury-primary btn-match-climate">
+              <span>✨ Match with Current Weather</span>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </a>
+
+            <button
+              type="button"
+              class="btn-delete-flacon"
+              (click)="deleteFlacon()"
+              [disabled]="isDeleting()"
+            >
+              @if (isDeleting()) {
+                <span>Removing...</span>
+              } @else {
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path
+                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                  ></path>
+                </svg>
+                <span>Remove Flacon</span>
+              }
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

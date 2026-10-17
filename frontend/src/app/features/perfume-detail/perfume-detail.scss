@@ -1,0 +1,760 @@
+.perfume-detail-root {
+  position: relative;
+  width: 100%;
+  min-height: calc(100vh - 80px);
+  padding: 2.5rem 1.5rem 6rem;
+  overflow-x: hidden;
+  background-color: var(--bg-dark);
+}
+
+/* Background Ambient Orbs */
+.detail-ambient-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(140px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.glow-top {
+  top: -80px;
+  right: -100px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.14) 0%, transparent 70%);
+}
+
+.glow-bottom {
+  bottom: 5%;
+  left: -150px;
+  width: 650px;
+  height: 650px;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
+}
+
+.detail-page-container {
+  max-width: 1360px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Navigation Header */
+.detail-top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+
+  .btn-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    background: rgba(18, 18, 26, 0.6);
+    border: 1px solid var(--border-subtle);
+    border-radius: 9999px;
+    backdrop-filter: blur(12px);
+    transition: var(--transition-fast);
+
+    &:hover {
+      color: var(--gold-300);
+      border-color: var(--border-gold);
+      transform: translateX(-3px);
+    }
+  }
+
+  .flacon-id-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.4rem 0.9rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 9999px;
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+
+    .id-sparkle {
+      color: var(--gold-400);
+    }
+  }
+}
+
+/* Main Layout Grid */
+.detail-main-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 2.8rem;
+  align-items: start;
+}
+
+/* ==========================================================================
+   LEFT: FLACON SHOWCASE STAGE & FLYING NOTES
+   ========================================================================== */
+.flacon-showcase-stage {
+  position: relative;
+  min-height: 580px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  overflow: hidden;
+  border: 1px solid var(--border-gold);
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(20, 20, 32, 0.8) 0%,
+    rgba(10, 10, 15, 0.95) 100%
+  );
+  user-select: none;
+  cursor: crosshair;
+}
+
+/* Rotating Ambient Compass Ring */
+.scent-aura-ring {
+  position: absolute;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  border: 1px dashed rgba(212, 175, 55, 0.22);
+  pointer-events: none;
+  animation: rotateCompass 35s linear infinite;
+  z-index: 1;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gold-400);
+    box-shadow: 0 0 10px var(--gold-400);
+  }
+}
+
+.scent-aura-core-glow {
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, transparent 70%);
+  filter: blur(40px);
+  pointer-events: none;
+  animation: pulseGlow 4s ease-in-out infinite;
+  z-index: 1;
+}
+
+@keyframes rotateCompass {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==========================================================================
+   INTERACTIVE VAPOR CANVAS & SCENT DISPERSION
+   ========================================================================== */
+.vapor-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ==========================================================================
+   FLYING OLFACTORY NOTES WITH CURSOR REPULSION
+   ========================================================================== */
+.flying-notes-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.flying-note-anchor {
+  position: absolute;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: transform 0.24s cubic-bezier(0.18, 0.9, 0.3, 1.25);
+  will-change: transform;
+}
+
+.flying-note-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.42rem 0.9rem;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  animation: floatScentNote ease-in-out infinite alternate;
+  white-space: nowrap;
+  user-select: none;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 25px rgba(212, 175, 55, 0.55);
+  }
+
+  .note-glyph {
+    font-size: 0.7rem;
+  }
+
+  &.note-type-top {
+    background: rgba(245, 230, 180, 0.16);
+    border: 1px solid rgba(247, 230, 181, 0.5);
+    color: var(--gold-300);
+    box-shadow: 0 0 18px rgba(212, 175, 55, 0.3);
+  }
+
+  &.note-type-heart {
+    background: rgba(244, 114, 182, 0.16);
+    border: 1px solid rgba(244, 114, 182, 0.5);
+    color: #fbcfe8;
+    box-shadow: 0 0 18px rgba(244, 114, 182, 0.28);
+  }
+
+  &.note-type-base {
+    background: rgba(168, 85, 247, 0.16);
+    border: 1px solid rgba(168, 85, 247, 0.5);
+    color: #e9d5ff;
+    box-shadow: 0 0 18px rgba(168, 85, 247, 0.28);
+  }
+}
+
+@keyframes floatScentNote {
+  0% {
+    transform: translateY(0px) translateX(0px) scale(0.96);
+    opacity: 0.75;
+  }
+  50% {
+    transform: translateY(-14px) translateX(6px) scale(1.02);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translateY(-24px) translateX(-4px) scale(1);
+    opacity: 0.85;
+  }
+}
+
+/* Flacon Image Frame */
+.flacon-image-frame {
+  position: relative;
+  z-index: 2;
+  width: 290px;
+  height: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.7));
+
+  &.burst-pulse {
+    animation: burstPulse 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .flacon-hero-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 14px;
+    transition: transform 0.5s ease;
+  }
+
+  .flacon-concentration-badge {
+    position: absolute;
+    bottom: -15px;
+    padding: 0.35rem 0.9rem;
+    background: rgba(14, 14, 20, 0.85);
+    border: 1px solid var(--border-gold);
+    border-radius: 9999px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--gold-300);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  }
+}
+
+@keyframes burstPulse {
+  0% {
+    transform: scale(0.96);
+  }
+  45% {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 35px rgba(212, 175, 55, 0.6));
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.flacon-stage-footer {
+  margin-top: 2.2rem;
+  z-index: 2;
+
+  .interaction-hint {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+  }
+}
+
+/* ==========================================================================
+   RIGHT: OLFACTORY DETAILS & PROGRESSION
+   ========================================================================== */
+.flacon-info-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+
+/* Title Card */
+.flacon-title-card {
+  padding: 2.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+
+  .flacon-brand-label {
+    font-size: 0.82rem;
+    letter-spacing: 0.2em;
+    color: var(--gold-400);
+    font-weight: 700;
+  }
+
+  .flacon-hero-title {
+    font-family: var(--font-serif);
+    font-size: clamp(2.2rem, 3.8vw, 3rem);
+    line-height: 1.15;
+  }
+
+  .flacon-meta-pills {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+
+    .spec-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.8rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 9999px;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+
+      .pill-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--gold-400);
+      }
+    }
+  }
+}
+
+/* Olfactory Pyramid Architecture */
+.olfactory-pyramid-card {
+  padding: 2.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  .pyramid-card-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    .pyramid-card-title {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      color: var(--text-main);
+    }
+  }
+}
+
+.pyramid-levels-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.pyramid-level {
+  padding: 1.25rem 1.5rem;
+  border-radius: 12px;
+  background: rgba(10, 10, 16, 0.6);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  transition: var(--transition-smooth);
+
+  &:hover {
+    border-color: var(--border-gold);
+    transform: translateX(4px);
+  }
+
+  &.level-top {
+    border-left: 3px solid var(--gold-400);
+  }
+
+  &.level-heart {
+    border-left: 3px solid #f472b6;
+  }
+
+  &.level-base {
+    border-left: 3px solid #c084fc;
+  }
+
+  .level-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .level-identity {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      .level-icon-badge {
+        font-size: 1rem;
+        color: var(--gold-400);
+      }
+
+      .level-title {
+        font-family: var(--font-serif);
+        font-size: 1.05rem;
+        color: var(--text-main);
+      }
+
+      .level-timing {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        display: block;
+      }
+    }
+
+    .level-volatility {
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 0.2rem 0.55rem;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 4px;
+    }
+  }
+
+  .notes-chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    .pyramid-note-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      transition: var(--transition-fast);
+
+      .chip-spark {
+        font-size: 0.65rem;
+      }
+
+      &.chip-top {
+        background: rgba(212, 175, 55, 0.1);
+        border: 1px solid rgba(212, 175, 55, 0.25);
+        color: var(--gold-300);
+
+        &:hover {
+          background: rgba(212, 175, 55, 0.2);
+          border-color: var(--gold-400);
+        }
+      }
+
+      &.chip-heart {
+        background: rgba(244, 114, 182, 0.1);
+        border: 1px solid rgba(244, 114, 182, 0.25);
+        color: #fbcfe8;
+
+        &:hover {
+          background: rgba(244, 114, 182, 0.2);
+          border-color: #f472b6;
+        }
+      }
+
+      &.chip-base {
+        background: rgba(168, 85, 247, 0.1);
+        border: 1px solid rgba(168, 85, 247, 0.25);
+        color: #e9d5ff;
+
+        &:hover {
+          background: rgba(168, 85, 247, 0.2);
+          border-color: #c084fc;
+        }
+      }
+    }
+
+    .notes-empty {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+  }
+}
+
+/* Main Accords */
+.accords-card {
+  padding: 2.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+
+  .accords-card-title {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    color: var(--text-main);
+  }
+
+  .accords-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .accord-bar-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    .accord-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+
+      .accord-title {
+        color: var(--text-main);
+        font-weight: 500;
+      }
+
+      .accord-pct {
+        color: var(--gold-400);
+        font-size: 0.74rem;
+      }
+    }
+
+    .accord-track {
+      width: 100%;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 9999px;
+      overflow: hidden;
+
+      .accord-fill {
+        width: 82%;
+        height: 100%;
+        background: var(--gold-gradient);
+        border-radius: 9999px;
+      }
+    }
+  }
+}
+
+/* Seasonality Matrix */
+.seasonality-card {
+  padding: 2.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+
+  .seasonality-title {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    color: var(--text-main);
+  }
+
+  .seasons-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+
+  .season-box {
+    padding: 1.1rem 0.8rem;
+    background: rgba(10, 10, 16, 0.5);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    text-align: center;
+    transition: var(--transition-fast);
+
+    .season-symbol {
+      font-size: 1.4rem;
+    }
+
+    .season-name {
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .season-status {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    &.active-season {
+      background: rgba(212, 175, 55, 0.12);
+      border-color: var(--gold-400);
+      box-shadow: 0 0 16px rgba(212, 175, 55, 0.2);
+
+      .season-name {
+        color: var(--gold-300);
+      }
+
+      .season-status {
+        color: var(--gold-400);
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+/* Actions Row */
+.detail-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+
+  .btn-match-climate {
+    padding: 0.95rem 1.8rem;
+    font-size: 0.92rem;
+  }
+
+  .btn-delete-flacon {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.9rem 1.4rem;
+    background: rgba(220, 53, 69, 0.1);
+    color: #ff8591;
+    border: 1px solid rgba(220, 53, 69, 0.25);
+    border-radius: 9999px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition-fast);
+
+    &:hover {
+      background: rgba(220, 53, 69, 0.22);
+      border-color: #ff6b7d;
+      color: #fff;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+/* Loading & Error Stages */
+.loading-detail-stage,
+.error-detail-stage {
+  padding: 5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1.2rem;
+  max-width: 600px;
+  margin: 4rem auto;
+
+  .loading-title {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--gold-300);
+  }
+
+  .loading-sub {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+
+  .error-icon {
+    font-size: 2.5rem;
+  }
+}
+
+.loading-spinner {
+  width: 42px;
+  height: 42px;
+  border: 3px solid rgba(212, 175, 55, 0.2);
+  border-top-color: var(--gold-400);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .detail-main-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .flacon-showcase-stage {
+    min-height: 480px;
+  }
+
+  .accords-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .seasons-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

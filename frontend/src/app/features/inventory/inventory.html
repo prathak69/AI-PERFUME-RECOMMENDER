@@ -1,46 +1,162 @@
-<p>inventory works!</p>
+<div class="inventory-vault-page">
+  <div class="vault-header">
+    <div class="header-text-group">
+      <span class="luxury-badge">PERSONAL ATELIER VAULT</span>
+      <h1 class="vault-title">My Olfactory Wardrobe</h1>
+      <p class="vault-subtitle">
+        Curate your personal collection of niche and designer flacons. The recommendation engine
+        references your vault for customized layering and wearing recommendations.
+      </p>
+    </div>
 
-<ul>
-  @for (perfume of perfumes(); track perfume.id || perfume.name + perfume.brand) {
-    <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 12px">
-      <img
-        [src]="
-          perfume.image_url ||
-          'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=800&q=80'
-        "
-        [alt]="perfume.name"
-        style="
-          width: 54px;
-          height: 54px;
-          object-fit: contain;
-          border-radius: 8px;
-          border: 1px solid #ddd;
-          background: #fafafa;
-          padding: 3px;
-        "
-      />
-      <a [routerLink]="['/perfume', perfume.id]" style="font-size: 1.05rem; font-weight: 500">
-        {{ perfume.name | titlecase }} by {{ perfume.brand | titlecase }}
-      </a>
-      <button (click)="deletePerfume(perfume.id)">delete</button>
-    </li>
-  }
-</ul>
+    <!-- Quick Stats -->
+    <div class="vault-count-pill">
+      <span class="count-number">{{ perfumes().length }}</span>
+      <span class="count-label">Flacons in Vault</span>
+    </div>
+  </div>
 
-<form [formGroup]="perfumeForm">
-  <label for="name">Name: </label>
-  <input type="text" formControlName="name" placeholder="Perfume Name" id="name" /><br />
-  <label for="brand">Brand: </label>
-  <input type="text" formControlName="brand" placeholder="Brand" id="brand" /><br />
-  <button type="submit" (click)="onSubmit()" [disabled]="isSubmitting() || perfumeForm.invalid">
-    @if (isSubmitting()) {
-      <span>Adding perfume..</span>
-    } @else {
-      <span>Add Perfume</span>
-    }
-  </button>
-</form>
+  <div class="vault-main-grid">
+    <!-- Left: Add New Perfume Form -->
+    <div class="add-perfume-card luxury-glass-card">
+      <div class="card-header">
+        <span class="luxury-badge">ACQUISITION</span>
+        <h3 class="card-title">Add Flacon to Vault</h3>
+      </div>
 
-@if (errorMessage()) {
-  <h5 style="color: red">{{ errorMessage() }}</h5>
-}
+      <form [formGroup]="perfumeForm" (ngSubmit)="onSubmit()" class="luxury-form">
+        <div class="form-group">
+          <label for="name">Perfume Name</label>
+          <input
+            type="text"
+            formControlName="name"
+            placeholder="e.g. Eros, Sauvage, Oud Wood"
+            id="name"
+            class="luxury-input"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="brand">Fragrance House / Brand</label>
+          <input
+            type="text"
+            formControlName="brand"
+            placeholder="e.g. Versace, Dior, Tom Ford"
+            id="brand"
+            class="luxury-input"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="image_url"
+            >Bottle Photo URL <span class="optional-label">(Optional)</span></label
+          >
+          <input
+            type="url"
+            formControlName="image_url"
+            placeholder="Auto-detected if left blank"
+            id="image_url"
+            class="luxury-input"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="btn-luxury-primary btn-add-flacon"
+          [disabled]="isSubmitting() || perfumeForm.invalid"
+        >
+          @if (isSubmitting()) {
+            <span>Archiving to Vault...</span>
+          } @else {
+            <span>+ Add to Wardrobe</span>
+          }
+        </button>
+      </form>
+
+      @if (errorMessage()) {
+        <div class="error-pill">
+          <span>{{ errorMessage() }}</span>
+        </div>
+      }
+    </div>
+
+    <!-- Right: Collection Grid -->
+    <div class="collection-shelf">
+      @if (isLoading()) {
+        <div class="loading-state">
+          <div class="loading-shimmer">Curating your flacon shelf...</div>
+        </div>
+      } @else if (perfumes().length === 0) {
+        <div class="empty-shelf luxury-glass-card">
+          <div class="empty-shelf-icon">🏛️</div>
+          <h4 class="empty-shelf-title">Your Wardrobe is Empty</h4>
+          <p class="empty-shelf-desc">
+            Use the form to add your favorite flacons, or find recommendations through our AI
+            atelier.
+          </p>
+          <a routerLink="/recommend" class="btn-luxury-outline">
+            <span>Discover Scents to Add</span>
+          </a>
+        </div>
+      } @else {
+        <div class="flacon-cards-grid">
+          @for (perfume of perfumes(); track perfume.id || perfume.name + perfume.brand) {
+            <div class="flacon-card luxury-glass-card">
+              <div class="flacon-image-wrapper">
+                <img
+                  [src]="
+                    perfume.image_url ||
+                    'https://images.unsplash.com/photo-1547887537-6158d64c35b3?auto=format&fit=crop&w=800&q=80'
+                  "
+                  [alt]="perfume.name"
+                  class="flacon-thumb"
+                  loading="lazy"
+                  referrerpolicy="no-referrer"
+                  (error)="onImageError($event)"
+                />
+                <span class="flacon-badge">Extrait</span>
+              </div>
+
+              <div class="flacon-info">
+                <span class="flacon-brand">{{ perfume.brand | titlecase }}</span>
+                <a [routerLink]="['/perfume', perfume.id]" class="flacon-name-link">
+                  {{ perfume.name | titlecase }}
+                </a>
+              </div>
+
+              <div class="flacon-actions">
+                <a
+                  [routerLink]="['/perfume', perfume.id]"
+                  class="btn-inspect"
+                  title="Inspect Notes"
+                >
+                  Inspect
+                </a>
+                <button
+                  type="button"
+                  (click)="deletePerfume(perfume)"
+                  class="btn-delete"
+                  title="Remove from Wardrobe"
+                >
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path
+                      d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>

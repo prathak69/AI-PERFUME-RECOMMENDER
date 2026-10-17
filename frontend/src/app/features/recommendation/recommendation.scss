@@ -1,0 +1,345 @@
+.consultation-page {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.consultation-header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+
+  .consultation-title {
+    font-family: var(--font-serif);
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    color: var(--text-main);
+  }
+
+  .consultation-subtitle {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+}
+
+.consultation-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+.consultation-form-card {
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+  border: 1px solid var(--border-gold);
+}
+
+.card-section-title {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  color: var(--text-main);
+  letter-spacing: 0.03em;
+}
+
+.luxury-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+
+  label {
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.04em;
+  }
+
+  .input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .input-icon {
+      position: absolute;
+      left: 1rem;
+      color: var(--gold-400);
+      pointer-events: none;
+    }
+
+    .luxury-input {
+      width: 100%;
+      padding: 0.85rem 1rem 0.85rem 2.8rem;
+      background: rgba(10, 10, 16, 0.7);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      color: #fff;
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      transition: var(--transition-fast);
+      outline: none;
+
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.25);
+      }
+
+      &:focus {
+        border-color: var(--gold-400);
+        box-shadow: 0 0 12px rgba(212, 175, 55, 0.25);
+      }
+    }
+  }
+
+  .quick-pills-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin-top: 0.2rem;
+
+    .quick-pill {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      border-radius: 9999px;
+      padding: 0.2rem 0.65rem;
+      font-size: 0.72rem;
+      cursor: pointer;
+      transition: var(--transition-fast);
+
+      &:hover {
+        background: rgba(212, 175, 55, 0.12);
+        color: var(--gold-300);
+        border-color: var(--border-gold);
+      }
+    }
+  }
+}
+
+.btn-submit-recommend {
+  width: 100%;
+  padding: 1rem;
+  margin-top: 0.5rem;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.spinner-dot {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #000;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1rem;
+  background: rgba(220, 53, 69, 0.12);
+  border: 1px solid rgba(220, 53, 69, 0.3);
+  border-radius: 8px;
+  color: #ff8591;
+  font-size: 0.88rem;
+}
+
+/* Results Card */
+.result-card {
+  padding: 2.5rem;
+  border: 1px solid var(--border-gold);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+}
+
+.weather-telemetry-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 1.5rem;
+  background: rgba(14, 14, 22, 0.65);
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+
+  .weather-main-info {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+
+    .weather-emoji-icon {
+      font-size: 2.2rem;
+    }
+
+    .weather-temperature {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: block;
+      line-height: 1.1;
+    }
+
+    .weather-condition-badge {
+      font-size: 0.78rem;
+      color: var(--gold-400);
+      text-transform: capitalize;
+    }
+  }
+
+  .weather-meta-items {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+
+    .weather-meta-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+
+      .meta-label {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+      }
+
+      .meta-val {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text-main);
+      }
+    }
+  }
+}
+
+.recommendation-hero-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.4rem;
+
+  .recommendation-eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    color: var(--gold-400);
+    font-weight: 700;
+  }
+
+  .perfume-name-title {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 3.2vw, 2.8rem);
+    line-height: 1.15;
+  }
+}
+
+.reasoning-box {
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid var(--gold-500);
+  padding: 1.25rem 1.5rem;
+  border-radius: 0 10px 10px 0;
+  width: 100%;
+
+  .reasoning-heading {
+    font-family: var(--font-serif);
+    font-size: 0.95rem;
+    color: var(--gold-300);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+
+  .reasoning-text {
+    font-size: 0.96rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+}
+
+/* Empty State */
+.empty-state-card {
+  padding: 4rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1.2rem;
+  min-height: 380px;
+
+  .empty-icon-ring {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    border: 1px dashed var(--border-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold-400);
+    background: rgba(212, 175, 55, 0.05);
+
+    .empty-svg {
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  .empty-title {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    color: var(--text-main);
+  }
+
+  .empty-desc {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    max-width: 420px;
+    line-height: 1.6;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 900px) {
+  .consultation-layout {
+    grid-template-columns: 1fr;
+  }
+}

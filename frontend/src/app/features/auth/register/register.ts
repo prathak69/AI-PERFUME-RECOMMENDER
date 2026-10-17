@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormsModule, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthApi } from '../../../core/services/auth-api';
 import { Router } from '@angular/router';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   imports: [FormsModule, ReactiveFormsModule],
@@ -13,6 +14,7 @@ export class Register implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthApi);
   private router = inject(Router);
+  readonly toastService = inject(ToastService);
 
   registrationForm: any;
 
@@ -31,10 +33,15 @@ export class Register implements OnInit {
   register() {
     this.authService.register(this.registrationForm.value).subscribe({
       next: () => {
-        this.router.navigate(['/']);
+        this.toastService.success(
+          'Wardrobe Account Created',
+          'Welcome to AURA Parfumerie. Please sign in with your credentials.',
+        );
+        this.router.navigate(['/auth/login']);
       },
       error: (err) => {
-        console.log(err);
+        const msg = err.error?.detail || 'Could not create account';
+        this.toastService.error('Registration Error', msg);
       },
     });
   }
